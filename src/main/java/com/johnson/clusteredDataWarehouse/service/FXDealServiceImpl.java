@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class FXDealServiceImpl implements FXDealService{
     fxDeal.setRequestId(dealRequest.getRequestId());
     fxDeal.setConvertingCurrency(dealRequest.getConvertingCurrency());
     fxDeal.setOrderingCurrency(dealRequest.getOrderingCurrency());
-    fxDeal.setOrderTimeStamp(dealRequest.getOrderTimeStamp());
+    fxDeal.setOrderTimeStamp(LocalDateTime.now());
     fxDeal.setAmount(dealRequest.getAmount());
     FXDeal savedDeal = fxDealRepository.save(fxDeal);
     log.info("new FXDeal created {}", dealRequest);

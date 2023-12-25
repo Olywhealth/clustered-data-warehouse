@@ -25,6 +25,5 @@ public class FXDealRequest {
   private String requestId;
   private Currency orderingCurrency;
   private Currency convertingCurrency;
-  private LocalDateTime orderTimeStamp;
   private BigDecimal amount;
 }
