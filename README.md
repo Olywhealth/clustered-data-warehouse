@@ -49,23 +49,6 @@ This project implements a data warehouse for Bloomberg to analyze FX deals. The 
 - Docker Compose
 - Maven
 
-### Development:
-- Database
-  - Utilizes MySQL for data storage.
-
-- Exception Handling:
-  - Proper error and exception handling are implemented to ensure smooth operation.
-
-- Logging:
-  - Logging is incorporated for better visibility into the system's behavior.
- 
-- Unit Testing:
-  - Extensive unit tests with high coverage ensure the reliability of the codebase.
- 
-
-### Usage
-- Access the Swagger API documentation [on swagger-ui](http://localhost:9090/api/v1/swagger-ui.html) to interact with the API and view available endpoints.
-
 ### Deployment
 
 1. **Clone the repository:**
