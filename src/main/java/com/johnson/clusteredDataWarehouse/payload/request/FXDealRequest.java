@@ -1,15 +1,16 @@
 package com.johnson.clusteredDataWarehouse.payload.request;
 
-import com.johnson.clusteredDataWarehouse.contracts.ValidCurrencyCode;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Currency;
 
 /**
@@ -22,8 +23,22 @@ import java.util.Currency;
 @NoArgsConstructor
 public class FXDealRequest {
 
+  @NotNull(message ="Ordering currency cannot be null")
+  @NotBlank(message = "requestId cannot be blank")
+  @Column(name = "requestId", nullable = false)
   private String requestId;
-  private Currency orderingCurrency;
-  private Currency convertingCurrency;
+
+  @NotNull(message ="Ordering currency cannot be null")
+  @NotBlank(message = "orderingCurrency cannot be blank")
+  @Column(name = "ordering_currency", nullable = false)
+  private String orderingCurrency;
+
+  @NotNull(message ="Converting currency cannot be null")
+  @NotBlank(message = "convertingCurrency cannot be blank")
+  @Column(name = "converting_currency", nullable = false)
+  private String convertingCurrency;
+
+  @Column(name ="fxDeal_amount", precision = 10)
+//  @Pattern(regexp = "^\\d{1,10}(\\.\\d{1,2})?$", message = "Invalid amount format")
   private BigDecimal amount;
 }

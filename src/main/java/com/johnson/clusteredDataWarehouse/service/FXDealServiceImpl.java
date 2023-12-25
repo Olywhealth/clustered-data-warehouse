@@ -12,9 +12,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.johnson.clusteredDataWarehouse.utils.CurrencyCodeValidator.isISOCurrencyCodeNotValid;
 
 /**
  * @author Johnson on 24/12/2023
@@ -31,6 +34,11 @@ public class FXDealServiceImpl implements FXDealService{
   @ExtractRequestResponse
   public FXDealResponse createFXDeal(FXDealRequest dealRequest) {
     log.info("creating new FXDeal {}", dealRequest);
+    if (isISOCurrencyCodeNotValid(dealRequest.getOrderingCurrency()) || isISOCurrencyCodeNotValid(dealRequest.getConvertingCurrency())) {
+      log.info("Invalid currency code");
+      throw new CustomException("Invalid currency code");
+    }
+
     Optional<FXDeal> existingDeal = fxDealRepository.findFXDealByRequestId(dealRequest.getRequestId());
     if ( existingDeal.isPresent()) {
       log.info("Duplicate transaction request");
@@ -38,8 +46,8 @@ public class FXDealServiceImpl implements FXDealService{
     }
     FXDeal fxDeal = new FXDeal();
     fxDeal.setRequestId(dealRequest.getRequestId());
-    fxDeal.setConvertingCurrency(dealRequest.getConvertingCurrency());
-    fxDeal.setOrderingCurrency(dealRequest.getOrderingCurrency());
+    fxDeal.setConvertingCurrency(Currency.getInstance(dealRequest.getConvertingCurrency()));
+    fxDeal.setOrderingCurrency(Currency.getInstance(dealRequest.getOrderingCurrency()));
     fxDeal.setOrderTimeStamp(LocalDateTime.now());
     fxDeal.setAmount(dealRequest.getAmount());
     FXDeal savedDeal = fxDealRepository.save(fxDeal);

@@ -1,8 +1,5 @@
 package com.johnson.clusteredDataWarehouse.payload.response;
 
-import com.johnson.clusteredDataWarehouse.contracts.ValidCurrencyCode;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
