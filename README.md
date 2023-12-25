@@ -64,7 +64,7 @@ This project implements a data warehouse for Bloomberg to analyze FX deals. The 
  
 
 ### Usage
-- Access the Swagger API documentation at http://localhost:8090/swagger-ui.html to interact with the API and view available endpoints.
+- Access the Swagger API documentation at http://localhost:9090/swagger-ui.html to interact with the API and view available endpoints.
 
 ### Deployment
 
