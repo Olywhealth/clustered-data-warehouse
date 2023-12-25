@@ -23,6 +23,23 @@ This project implements a data warehouse for Bloomberg to analyze FX deals. The 
 
 - **Deployment:**
   - The project includes a Docker Compose configuration for easy deployment. You can set up the environment using the provided Docker Compose file.
+ 
+### Development:
+- Database
+  - Utilizes MySQL for data storage.
+
+- Exception Handling:
+  - Proper error and exception handling are implemented to ensure smooth operation.
+
+- Logging:
+  - Logging is incorporated for better visibility into the system's behavior.
+ 
+- Unit Testing:
+  - Extensive unit tests with high coverage ensure the reliability of the codebase.
+ 
+
+### Usage
+- Access the Swagger API documentation at http://localhost:8090/swagger-ui.html to interact with the API and view available endpoints.
 
 ## Getting Started
 
@@ -54,4 +71,4 @@ This project implements a data warehouse for Bloomberg to analyze FX deals. The 
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/ClusteredData-Warehouse.git
+   git clone https://github.com/Olywhealth/clustered-data-warehouse.git
