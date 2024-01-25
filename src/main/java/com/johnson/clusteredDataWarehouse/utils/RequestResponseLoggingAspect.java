@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,8 @@ public class RequestResponseLoggingAspect {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    @Pointcut("@annotation(com.johnson.clusteredDataWarehouse.contracts.ExtractRequestResponse)")
+//    @Pointcut("@annotation(com.johnson.clusteredDataWarehouse.contracts.ExtractRequestResponse)") //This is used as annotation based to target specific methods
+    @Pointcut("execution(* com.johnson..*(..))") // Use this to target any method within the specified package
     public void provideValuesForLogging() {
     }
 
@@ -102,6 +104,8 @@ public class RequestResponseLoggingAspect {
             logger.info("Method name {}", joinPoint.getSignature().getName());
 
         } catch (Exception e) {
+            int lineNumber = e.getStackTrace()[0].getLineNumber();
+            logger.info("Line number {}", lineNumber);
             logger.info("AN EXCEPTION OCCURRED DUE TO :::: {0}", e);
         }
 

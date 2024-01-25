@@ -25,57 +25,57 @@ import static com.johnson.clusteredDataWarehouse.utils.CurrencyCodeValidator.isI
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class FXDealServiceImpl implements FXDealService{
+public class FXDealServiceImpl implements FXDealService {
 
-  private final FXDealRepository fxDealRepository;
-  private final ModelMapper modelMapper;
+    private final FXDealRepository fxDealRepository;
+    private final ModelMapper modelMapper;
 
+//    @ExtractRequestResponse
+    public FXDealResponse createFXDeal(FXDealRequest dealRequest) {
+//        System.out.println(2/0);
+        log.info("creating new FXDeal {}", dealRequest);
+        if (isISOCurrencyCodeNotValid(dealRequest.getOrderingCurrency()) || isISOCurrencyCodeNotValid(dealRequest.getConvertingCurrency())) {
+            log.info("Invalid currency code");
+            throw new CustomException("Invalid currency code");
+        }
 
-  @ExtractRequestResponse
-  public FXDealResponse createFXDeal(FXDealRequest dealRequest) {
-    log.info("creating new FXDeal {}", dealRequest);
-    if (isISOCurrencyCodeNotValid(dealRequest.getOrderingCurrency()) || isISOCurrencyCodeNotValid(dealRequest.getConvertingCurrency())) {
-      log.info("Invalid currency code");
-      throw new CustomException("Invalid currency code");
+        Optional<FXDeal> existingDeal = fxDealRepository.findFXDealByRequestId(dealRequest.getRequestId());
+        if (existingDeal.isPresent()) {
+            log.info("Duplicate transaction request");
+            throw new CustomException("This is a duplicate transaction");
+        }
+        FXDeal fxDeal = new FXDeal();
+        fxDeal.setRequestId(dealRequest.getRequestId());
+        fxDeal.setConvertingCurrency(Currency.getInstance(dealRequest.getConvertingCurrency()));
+        fxDeal.setOrderingCurrency(Currency.getInstance(dealRequest.getOrderingCurrency()));
+        fxDeal.setOrderTimeStamp(LocalDateTime.now());
+        fxDeal.setAmount(dealRequest.getAmount());
+        FXDeal savedDeal = fxDealRepository.save(fxDeal);
+        log.info("new FXDeal created {}", dealRequest);
+
+        return modelMapper.map(savedDeal, FXDealResponse.class);
+
     }
 
-    Optional<FXDeal> existingDeal = fxDealRepository.findFXDealByRequestId(dealRequest.getRequestId());
-    if ( existingDeal.isPresent()) {
-      log.info("Duplicate transaction request");
-      throw new CustomException("This is a duplicate transaction");
+    @ExtractRequestResponse
+    public List<FXDealResponse> getAllFXDeal() {
+        log.info("getting all deals");
+        List<FXDeal> allDeal = fxDealRepository.findAll();
+
+        return allDeal.stream().map(x -> modelMapper.map(x, FXDealResponse.class))
+                .collect(Collectors.toList());
     }
-    FXDeal fxDeal = new FXDeal();
-    fxDeal.setRequestId(dealRequest.getRequestId());
-    fxDeal.setConvertingCurrency(Currency.getInstance(dealRequest.getConvertingCurrency()));
-    fxDeal.setOrderingCurrency(Currency.getInstance(dealRequest.getOrderingCurrency()));
-    fxDeal.setOrderTimeStamp(LocalDateTime.now());
-    fxDeal.setAmount(dealRequest.getAmount());
-    FXDeal savedDeal = fxDealRepository.save(fxDeal);
-    log.info("new FXDeal created {}", dealRequest);
 
-    return modelMapper.map(savedDeal, FXDealResponse.class);
+    @ExtractRequestResponse
+    public FXDealResponse getUniqueDeal(Long id) {
+        log.info("Getting unique FXDeal {}", id);
 
-  }
+        FXDeal uniqueDeal = fxDealRepository.findById(id)
+                .orElseThrow(() -> new CustomException("No FXDeal for the ID: " + id));
+        log.info("Unique deal retrieved {}", uniqueDeal);
+        return modelMapper.map(uniqueDeal, FXDealResponse.class);
 
-  @ExtractRequestResponse
-  public List<FXDealResponse> getAllFXDeal() {
-    log.info("getting all deals");
-    List<FXDeal> allDeal = fxDealRepository.findAll();
-
-    return allDeal.stream().map(x-> modelMapper.map(x, FXDealResponse.class))
-            .collect(Collectors.toList());
-  }
-
-  @ExtractRequestResponse
-  public FXDealResponse getUniqueDeal(Long id) {
-    log.info("Getting unique FXDeal {}", id);
-
-    FXDeal uniqueDeal = fxDealRepository.findById(id)
-            .orElseThrow(()-> new CustomException("No FXDeal for the ID: "+id));
-    log.info("Unique deal retrieved {}", uniqueDeal);
-    return modelMapper.map(uniqueDeal, FXDealResponse.class);
-
-  }
+    }
 
 
 }
